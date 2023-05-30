@@ -35,17 +35,25 @@ function Square({ children, isSelected, updateBoard = null, index }: any): any {
 
 
 export default function Home() {
-  const [board, setBoard] = useState(() => {
-    const boardFromLocalStorage = window.localStorage.getItem('board');
-    return boardFromLocalStorage
-      ? JSON.parse(boardFromLocalStorage)
-      : Array(9).fill(null)
-  })
+  const [board, setBoard] = useState(Array(9).fill(null))
 
-  const [turno, setTurno] = useState(() => {
-    const turnoFromLocalStorage = window.localStorage.getItem('turno');
-    return turnoFromLocalStorage ? JSON.parse(turnoFromLocalStorage) : TURNOS.X
-  });
+
+  //   () => {
+  //   const boardFromLocalStorage = window.localStorage.getItem('board');
+  //   return boardFromLocalStorage
+  //     ? JSON.parse(boardFromLocalStorage)
+  //     : Array(9).fill(null)
+  // })
+
+  const [turno, setTurno] = useState(TURNOS.X)
+
+
+  //   () => {
+  //   const turnoFromLocalStorage = window.localStorage.getItem('turno');
+  //     return turnoFromLocalStorage ? JSON.parse(turnoFromLocalStorage) : TURNOS.X;
+
+
+  // });
 
   const [winner, setWinner] = useState<null | boolean>(null);
 
@@ -79,8 +87,8 @@ export default function Home() {
     let nuevoTurno = turno === TURNOS.X ? TURNOS.O : TURNOS.X;
     setTurno(nuevoTurno);
 
-    window.localStorage.setItem('board', JSON.stringify(newBoard))
-    window.localStorage.setItem('turno', JSON.stringify(nuevoTurno))
+    //window.localStorage.setItem('board', JSON.stringify(newBoard))
+    //window.localStorage.setItem('turno', JSON.stringify(nuevoTurno))
 
     const newWinner = checkWinner(newBoard);
     if (newWinner) {
