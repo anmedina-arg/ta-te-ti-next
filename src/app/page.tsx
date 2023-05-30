@@ -27,7 +27,7 @@ function Square({ children, isSelected, updateBoard = null, index }: any): any {
   return (
     <div
       onClick={handleClick}
-      className={`flex items-center justify-center border-black border-2 rounded-md m-1 p-8 h-5 w-5 ${isSelected ? 'bg-blue-300' : ''}`}>
+      className={`flex items-center justify-center border-black border-2 rounded-md m-1 p-8 h-5 w-5 ${isSelected ? 'bg-gradient-to-r from-purple-500 to-purple-900' : ''}`}>
       {children}
     </div>
   )
@@ -105,14 +105,14 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col justify-center items-center h-screen">
-      <h1 className="mb-4">Ta - Te - Ti</h1>
+    <main className="flex flex-col justify-center items-center h-screen bg-gradient-to-r from-fuchsia-500 to-pink-500">
+      <h1 className="text-3xl p-2 mb-4 bg-gradient-to-r from-purple-500 to-purple-900">Ta - Te - Ti</h1>
 
-      <button className="border-2 border-solid border-gray-400 rounded-md" onClick={restartGame}>
+      <button className="border-2 border-solid border-gray-400 rounded-md bg-gradient-to-r from-purple-500 to-purple-900 p-2" onClick={restartGame}>
         Resetear el juego
       </button>
 
-      <section className="grid grid-cols-3">
+      <section className="grid grid-cols-3 mt-4">
         {
           board.map((_, index) => {
             return (
