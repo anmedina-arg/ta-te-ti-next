@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const TURNOS = {
-  X: 'x',
-  O: 'o'
+  X: 'X',
+  O: 'O'
 };
 
 const WINNER_COMBOS = [
@@ -27,15 +27,50 @@ function Square({ children, isSelected, updateBoard = null, index }: any): any {
   return (
     <div
       onClick={handleClick}
-      className={`flex items-center justify-center border-black border-2 rounded-md m-1 p-8 h-5 w-5 ${isSelected ? 'bg-gradient-to-r from-purple-500 to-purple-900' : ''}`}>
+      className='flex items-center justify-center border-black border-2 rounded-md m-1 p-8 h-5 w-5 text-3xl shadow-md bg-gray-200'>
+      {children}
+    </div>
+  )
+};
+
+function SquareTurns({ children, isSelected, updateBoard = null, index }: any): any {
+
+  const handleClick = () => {
+    if (updateBoard) return updateBoard(index)
+  };
+
+  return (
+    <div
+      onClick={handleClick}
+      className={`flex items-center justify-center border-black border-2 rounded-md m-1 p-8 h-5 w-5 text-3xl 
+                  ${isSelected ? 'bg-gradient-to-r from-slate-100 to-slate-500 h-6 w-6' : ''}`}>
       {children}
     </div>
   )
 };
 
 
+
+
 export default function Home() {
-  const [board, setBoard] = useState(Array(9).fill(null))
+  //const [board, setBoard] = useState(Array(9).fill(null))
+
+  const [board, setBoard] = useState<Array<string | null>>([]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedBoard = localStorage.getItem('board');
+      if (storedBoard) {
+        setBoard(JSON.parse(storedBoard));
+      } else {
+        setBoard(Array(9).fill(null));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('board', JSON.stringify(board));
+  }, [board]);
 
 
   //   () => {
@@ -56,6 +91,8 @@ export default function Home() {
   // });
 
   const [winner, setWinner] = useState<null | boolean>(null);
+
+  const [showModal, setShowModal] = useState(false)
 
   const checkWinner = (checkBoard: any) => {
 
@@ -92,8 +129,10 @@ export default function Home() {
 
     const newWinner = checkWinner(newBoard);
     if (newWinner) {
+      setShowModal(true)
       setWinner(newWinner)
     } else if (checkGame(newBoard)) {
+      setShowModal(true)
       setWinner(false)
     }
   };
@@ -105,14 +144,14 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col justify-center items-center h-screen bg-gradient-to-r from-fuchsia-500 to-pink-500">
-      <h1 className="text-3xl p-2 mb-4 bg-gradient-to-r from-purple-500 to-purple-900">Ta - Te - Ti</h1>
+    <main className="h-screen flex flex-col justify-center items-center bg-gradient-to-r from-slate-500 to-slate-800">
+      <h1 className="text-3xl p-2 mb-4 text-white">Ta - Te - Ti</h1>
 
-      <button className="border-2 border-solid border-gray-400 rounded-md bg-gradient-to-r from-purple-500 to-purple-900 p-2" onClick={restartGame}>
-        Resetear el juego
+      <button className="rounded-full bg-gray-300 shadow-primary p-2 " onClick={restartGame}>
+        Empezar de nuevo
       </button>
 
-      <section className="grid grid-cols-3 mt-4">
+      <section className="grid grid-cols-3 mt-4 content-start h-fit">
         {
           board.map((_, index) => {
             return (
@@ -129,15 +168,16 @@ export default function Home() {
       </section>
 
       <section className="flex">
-        <Square isSelected={turno === TURNOS.X} >{TURNOS.X}</Square>
-        <Square isSelected={turno === TURNOS.O} >{TURNOS.O}</Square>
+        <SquareTurns isSelected={turno === TURNOS.X} >{TURNOS.X}</SquareTurns>
+        <SquareTurns isSelected={turno === TURNOS.O} >{TURNOS.O}</SquareTurns>
       </section>
 
       {
-        winner !== null &&
+        winner !== null && showModal === true &&
         (
           <section className="absolute bg-white border-2 border-black rounded-md p-4 flex flex-col justify-center items-center">
             <div>
+              <button onClick={() => setShowModal(false)} className="absolute top-1 right-1">X</button>
               <h2 className="text-center">
                 {
                   winner === false
